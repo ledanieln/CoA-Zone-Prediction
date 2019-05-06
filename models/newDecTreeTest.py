@@ -3,6 +3,9 @@ from sklearn import preprocessing
 from sklearn.datasets import load_iris
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 import matplotlib.pyplot as plt
 import graphviz
 import os
@@ -13,46 +16,32 @@ import pandas as pd
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 #load data
-trainData = pd.read_csv('../data/processed/trainFeatures.csv')
+trainData = pd.read_csv('../data/processed/train.csv')
+testData = pd.read_csv('../data/processed/validation.csv')
 
 #preprocess data, change string data to numerical
 Yle = preprocessing.LabelEncoder()
 Yle.fit(list(trainData['zoneType'].unique()))
-newY = Yle.transform(Yle.classes_)
-#print(newY)
 
 class_names = Yle.classes_
-print(class_names)
 
-oldY = list(Yle.inverse_transform(newY))
-
-#get relevant data for feature training
-dataNoID = trainData.drop(['zoneType'], axis=1)
-newData = pd.DataFrame()
-newData['structCount'] = dataNoID['structCount']
-newData['structRatio'] = dataNoID['structRatio']
-newData['recScore'] = dataNoID['recScore']
-X_train = newData
-feature_names = list(newData)
-print(X_train.head())
-
-#get target data
+#setup training data
+X_train = trainData.drop(['zoneType'], axis=1)
+#X_train = pd.DataFrame(trainData['StructureCount'])
 Y_train = Yle.transform(trainData['zoneType'])
 
-#get test data
-testData = pd.read_csv('../data/processed/testFeatures.csv')
-dataNoID = testData.drop(['zoneType'], axis=1)
-newTestData = pd.DataFrame()
-newTestData['structCount'] = dataNoID['structCount']
-newTestData['structRatio'] = dataNoID['structRatio']
-newTestData['recScore'] = dataNoID['recScore']
-X_test = newTestData
+#setup test data
+X_test = testData.drop(['zoneType'], axis=1)
+#X_test = pd.DataFrame(testData['StructureCount'])
 y_test = Yle.transform(testData['zoneType'])
 
-print(X_test.head())
+feature_names = list(X_train)
 
 #build decision tree
-clf=RandomForestClassifier(n_estimators=100)
+#clf = RandomForestClassifier(n_estimators=100)
+clf = tree.DecisionTreeClassifier()
+#clf = AdaBoostClassifier(n_estimators=100)
+#clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0).fit(X_train, Y_train) 
 clf = clf.fit(X_train, Y_train)
 y_pred = clf.fit(X_train, Y_train).predict(X_test)
 # dot_data = tree.export_graphviz(
@@ -65,7 +54,7 @@ y_pred = clf.fit(X_train, Y_train).predict(X_test)
 # 	out_file=None)
 
 # graph = graphviz.Source(dot_data)
-# graph.render('test')
+# graph.render("structureOnly")
 
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
