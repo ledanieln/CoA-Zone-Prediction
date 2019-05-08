@@ -20,8 +20,8 @@ import pandas as pd
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 #load data
-trainData = pd.read_csv('../data/processed/train2017-contains.csv')
-testData = pd.read_csv('../data/processed/validation2017-contains.csv')
+trainData = pd.read_csv('../data/processed/train2017.csv')
+testData = pd.read_csv('../data/processed/validation2017.csv')
 
 #preprocess data, change string data to numerical
 Yle = preprocessing.LabelEncoder()
@@ -48,9 +48,9 @@ clf1 = RandomForestClassifier(n_estimators=100)
 clf2 = tree.DecisionTreeClassifier(criterion='entropy', max_depth=20)
 #clf = AdaBoostClassifier(n_estimators=100)
 #clf = ComplementNB()
-clf3 = KNeighborsClassifier(n_neighbors=4)
-clf = SVC(gamma='scale', kernel='rbf', probability=True)
-eclf = VotingClassifier(estimators=[('rt', clf1), ('dt', clf2), ('knn', clf3)], voting='hard', weights=[1, 1, 1])
+clf = KNeighborsClassifier(n_neighbors=4)
+clf3 = SVC(gamma='scale', kernel='rbf', probability=True)
+#clf1 = VotingClassifier(estimators=[('rt', clf1), ('dt', clf2), ('knn', clf3)], voting='hard', weights=[1, 1, 1])
 #clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0).fit(X_train, Y_train) 
 #clf = clf.fit(X_train, Y_train)
 y_pred = clf2.fit(X_train, Y_train).predict(X_test)
