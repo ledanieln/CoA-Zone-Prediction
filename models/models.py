@@ -28,6 +28,7 @@ Yle = preprocessing.LabelEncoder()
 Yle.fit(list(trainData['zoneType'].unique()))
 
 class_names = Yle.classes_
+print(class_names)
 
 #setup training data
 X_train = trainData.drop(['zoneID', 'zoneType'], axis=1)
@@ -44,15 +45,15 @@ feature_names = list(X_train)
 #build decision tree
 clf1 = RandomForestClassifier(n_estimators=100)
 #clf = tree.DecisionTreeClassifier()
-clf2 = tree.DecisionTreeClassifier(criterion='entropy')
+clf2 = tree.DecisionTreeClassifier(criterion='entropy', max_depth=20)
 #clf = AdaBoostClassifier(n_estimators=100)
 #clf = ComplementNB()
 clf3 = KNeighborsClassifier(n_neighbors=4)
-#clf = SVC(gamma='scale', kernel='rbf', probability=True)
+clf = SVC(gamma='scale', kernel='rbf', probability=True)
 eclf = VotingClassifier(estimators=[('rt', clf1), ('dt', clf2), ('knn', clf3)], voting='hard', weights=[1, 1, 1])
-clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0).fit(X_train, Y_train) 
+#clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0).fit(X_train, Y_train) 
 #clf = clf.fit(X_train, Y_train)
-y_pred = clf.fit(X_train, Y_train).predict(X_test)
+y_pred = clf2.fit(X_train, Y_train).predict(X_test)
 
 #Naive Bayes
 # gnb = GaussianNB()
