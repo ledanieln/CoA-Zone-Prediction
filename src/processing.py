@@ -2,11 +2,10 @@ import pandas as pd
 from progress.bar import IncrementalBar
 
 #Import Data
-dfnorth = pd.read_csv('../data/processed/nAustinData.csv')
-dfsouth = pd.read_csv('../data/processed/sAustinData.csv')
+dfnorth = pd.read_csv('../data/processed/nAustinContains.csv')
+dfsouth = pd.read_csv('../data/processed/sAustinContains.csv')
 
-#print(dfnorth.head())
-#print(dfsouth.head())
+#Generate list of unique zone types
 zoneList = list(dfnorth.ZONING_ZTY.unique())
 zoneMap = {}
 
@@ -25,13 +24,15 @@ for row in zoneList:
 #Add reduced zones to dataFrame
 dfnorth['Reduced-Zone'] = dfnorth['ZONING_ZTY'].map(zoneMap)
 
-print(len(dfnorth))
-
 #Create dictionary for clean dataset
 train = {}
 
 uniqueZoneList = list(dfnorth.ZONING_ID.unique())
-uniqueFeatureList = list(dfnorth.zFEATURE.unique())
+
+#Make sure the training and testing datasets contain same number of features
+uniqueNFeatureList = list(dfnorth.FEATURE.unique())
+uniqueSFeatureList = list(dfsouth.FEATURE.unique())
+uniqueFeatureList = set(uniqueSFeatureList) & set (uniqueNFeatureList)
 
 #Create entry for each zone
 bar = IncrementalBar('Creating base dictionary..', max = len(uniqueZoneList))
@@ -49,18 +50,18 @@ for zone in uniqueZoneList:
 bar.finish()
 
 #Remove features that the area is greater than the Zone Area
-bar = IncrementalBar('Removing Large Areas..', max = len(dfnorth.index))
-for i in dfnorth.index:
-    if dfnorth.loc[i, 'z.Shape_Ar'] > dfnorth.loc[i, 'Shape_Area']:
-        dfnorth.drop([i])
-    bar.next()
-bar.finish()
+# bar = IncrementalBar('Removing Large Areas..', max = len(dfnorth.index))
+# for i in dfnorth.index:
+#     if dfnorth.loc[i, 'z.Shape_Ar'] > dfnorth.loc[i, 'Shape_Area']:
+#         dfnorth.drop([i])
+#     bar.next()
+# bar.finish()
 
 #Add areal statistics for each zone
 bar = IncrementalBar('Adding areal statistics..', max = len(uniqueFeatureList))
 for feature in uniqueFeatureList:
-    featureSums = dict(dfnorth[dfnorth['zFEATURE']==feature].groupby('ZONING_ID')['z.Shape_Ar'].sum())
-    featureCounts = dict(dfnorth[dfnorth['zFEATURE']==feature].groupby('ZONING_ID')['z.Shape_Ar'].count())
+    featureSums = dict(dfnorth[dfnorth['FEATURE']==feature].groupby('ZONING_ID')['Shape_Ar_1'].sum())
+    featureCounts = dict(dfnorth[dfnorth['FEATURE']==feature].groupby('ZONING_ID')['Shape_Ar_1'].count())
     for key, value in featureSums.items():
         train[key]['percent' + feature + 'Area'] = value/(train[key]['zoneArea'])
     for key, value in featureCounts.items():
@@ -69,7 +70,7 @@ for feature in uniqueFeatureList:
 bar.finish()
 
 trainSet = pd.DataFrame.from_dict(train, orient='index').reset_index(drop=True)
-trainSet.to_csv('../data/processed/train2017.csv', index=False)
+trainSet.to_csv('../data/processed/train2017-contains.csv', index=False)
 #Features
 #Count of Feature
 #Percent Area of Feature

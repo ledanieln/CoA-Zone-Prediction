@@ -2,7 +2,8 @@ import pandas as pd
 from progress.bar import IncrementalBar
 
 #Import Data
-dfsouth = pd.read_csv('../data/processed/sAustinData.csv')
+dfnorth = pd.read_csv('../data/processed/nAustinContains.csv')
+dfsouth = pd.read_csv('../data/processed/sAustinContains.csv')
 
 #print(dfsouth.head())
 #print(dfsouth.head())
@@ -30,7 +31,10 @@ print(len(dfsouth))
 train = {}
 
 uniqueZoneList = list(dfsouth.ZONING_ID.unique())
-uniqueFeatureList = list(dfsouth.FEATURE.unique())
+uniqueNFeatureList = list(dfnorth.FEATURE.unique())
+uniqueSFeatureList = list(dfsouth.FEATURE.unique())
+
+uniqueFeatureList = set(uniqueSFeatureList) & set (uniqueNFeatureList)
 
 #Create entry for each zone
 bar = IncrementalBar('Creating base dictionary..', max = len(uniqueZoneList))
@@ -48,12 +52,12 @@ for zone in uniqueZoneList:
 bar.finish()
 
 #Remove features that the area is greater than the Zone Area
-bar = IncrementalBar('Removing Large Areas..', max = len(dfsouth.index))
-for i in dfsouth.index:
-    if dfsouth.loc[i, 'Shape_Ar_1'] > dfsouth.loc[i, 'Shape_Area']:
-        dfsouth.drop([i])
-    bar.next()
-bar.finish()
+# bar = IncrementalBar('Removing Large Areas..', max = len(dfsouth.index))
+# for i in dfsouth.index:
+#     if dfsouth.loc[i, 'Shape_Ar_1'] > dfsouth.loc[i, 'Shape_Area']:
+#         dfsouth.drop([i])
+#     bar.next()
+# bar.finish()
 
 #Add areal statistics for each zone
 bar = IncrementalBar('Adding areal statistics..', max = len(uniqueFeatureList))
@@ -68,7 +72,7 @@ for feature in uniqueFeatureList:
 bar.finish()
 
 trainSet = pd.DataFrame.from_dict(train, orient='index').reset_index(drop=True)
-trainSet.to_csv('../data/processed/validation2017.csv', index=False)
+trainSet.to_csv('../data/processed/validation2017-contains.csv', index=False)
 #Features
 #Count of Feature
 #Percent Area of Feature

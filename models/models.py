@@ -20,8 +20,8 @@ import pandas as pd
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 #load data
-trainData = pd.read_csv('../data/processed/train2017.csv')
-testData = pd.read_csv('../data/processed/validation2017.csv')
+trainData = pd.read_csv('../data/processed/train2017-contains.csv')
+testData = pd.read_csv('../data/processed/validation2017-contains.csv')
 
 #preprocess data, change string data to numerical
 Yle = preprocessing.LabelEncoder()
@@ -49,10 +49,10 @@ clf2 = tree.DecisionTreeClassifier(criterion='entropy')
 #clf = ComplementNB()
 clf3 = KNeighborsClassifier(n_neighbors=4)
 #clf = SVC(gamma='scale', kernel='rbf', probability=True)
-eclf = VotingClassifier(estimators=[('rt', clf1), ('dt', clf2), ('knn', clf3)], voting='hard', weights=[2, 1, 2])
-#clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0).fit(X_train, Y_train) 
+eclf = VotingClassifier(estimators=[('rt', clf1), ('dt', clf2), ('knn', clf3)], voting='hard', weights=[1, 1, 1])
+clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0).fit(X_train, Y_train) 
 #clf = clf.fit(X_train, Y_train)
-y_pred = eclf.fit(X_train, Y_train).predict(X_test)
+y_pred = clf.fit(X_train, Y_train).predict(X_test)
 
 #Naive Bayes
 # gnb = GaussianNB()
