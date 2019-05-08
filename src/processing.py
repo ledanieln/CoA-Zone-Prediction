@@ -2,8 +2,8 @@ import pandas as pd
 from progress.bar import IncrementalBar
 
 #Import Data
-dfnorth = pd.read_csv('../data/processed/Austin-North-Features.csv')
-dfsouth = pd.read_csv('../data/processed/Austin-South-Features.csv')
+dfnorth = pd.read_csv('../data/processed/nAustinData.csv')
+dfsouth = pd.read_csv('../data/processed/sAustinData.csv')
 
 #print(dfnorth.head())
 #print(dfsouth.head())
@@ -31,7 +31,7 @@ print(len(dfnorth))
 train = {}
 
 uniqueZoneList = list(dfnorth.ZONING_ID.unique())
-uniqueFeatureList = list(dfnorth.FEATURE.unique())
+uniqueFeatureList = list(dfnorth.zFEATURE.unique())
 
 #Create entry for each zone
 bar = IncrementalBar('Creating base dictionary..', max = len(uniqueZoneList))
@@ -48,11 +48,19 @@ for zone in uniqueZoneList:
     bar.next()
 bar.finish()
 
+#Remove features that the area is greater than the Zone Area
+bar = IncrementalBar('Removing Large Areas..', max = len(dfnorth.index))
+for i in dfnorth.index:
+    if dfnorth.loc[i, 'z.Shape_Ar'] > dfnorth.loc[i, 'Shape_Area']:
+        dfnorth.drop([i])
+    bar.next()
+bar.finish()
+
 #Add areal statistics for each zone
 bar = IncrementalBar('Adding areal statistics..', max = len(uniqueFeatureList))
 for feature in uniqueFeatureList:
-    featureSums = dict(dfnorth[dfnorth['FEATURE']==feature].groupby('ZONING_ID')['Shape_Area_2'].sum())
-    featureCounts = dict(dfnorth[dfnorth['FEATURE']==feature].groupby('ZONING_ID')['Shape_Area_2'].count())
+    featureSums = dict(dfnorth[dfnorth['zFEATURE']==feature].groupby('ZONING_ID')['z.Shape_Ar'].sum())
+    featureCounts = dict(dfnorth[dfnorth['zFEATURE']==feature].groupby('ZONING_ID')['z.Shape_Ar'].count())
     for key, value in featureSums.items():
         train[key]['percent' + feature + 'Area'] = value/(train[key]['zoneArea'])
     for key, value in featureCounts.items():
@@ -61,7 +69,7 @@ for feature in uniqueFeatureList:
 bar.finish()
 
 trainSet = pd.DataFrame.from_dict(train, orient='index').reset_index(drop=True)
-trainSet.to_csv('../data/processed/train.csv', index=False)
+trainSet.to_csv('../data/processed/train2017.csv', index=False)
 #Features
 #Count of Feature
 #Percent Area of Feature

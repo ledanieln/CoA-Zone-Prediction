@@ -2,7 +2,7 @@ import pandas as pd
 from progress.bar import IncrementalBar
 
 #Import Data
-dfsouth = pd.read_csv('../data/processed/Austin-South-Features.csv')
+dfsouth = pd.read_csv('../data/processed/sAustinData.csv')
 
 #print(dfsouth.head())
 #print(dfsouth.head())
@@ -30,7 +30,7 @@ print(len(dfsouth))
 train = {}
 
 uniqueZoneList = list(dfsouth.ZONING_ID.unique())
-uniqueFeatureList = list(dfsouth.fJoin_FEATURE.unique())
+uniqueFeatureList = list(dfsouth.FEATURE.unique())
 
 #Create entry for each zone
 bar = IncrementalBar('Creating base dictionary..', max = len(uniqueZoneList))
@@ -47,11 +47,19 @@ for zone in uniqueZoneList:
     bar.next()
 bar.finish()
 
+#Remove features that the area is greater than the Zone Area
+bar = IncrementalBar('Removing Large Areas..', max = len(dfsouth.index))
+for i in dfsouth.index:
+    if dfsouth.loc[i, 'Shape_Ar_1'] > dfsouth.loc[i, 'Shape_Area']:
+        dfsouth.drop([i])
+    bar.next()
+bar.finish()
+
 #Add areal statistics for each zone
 bar = IncrementalBar('Adding areal statistics..', max = len(uniqueFeatureList))
 for feature in uniqueFeatureList:
-    featureSums = dict(dfsouth[dfsouth['fJoin_FEATURE']==feature].groupby('ZONING_ID')['fJoin_Shape_Area'].sum())
-    featureCounts = dict(dfsouth[dfsouth['fJoin_FEATURE']==feature].groupby('ZONING_ID')['fJoin_Shape_Area'].count())
+    featureSums = dict(dfsouth[dfsouth['FEATURE']==feature].groupby('ZONING_ID')['Shape_Ar_1'].sum())
+    featureCounts = dict(dfsouth[dfsouth['FEATURE']==feature].groupby('ZONING_ID')['Shape_Ar_1'].count())
     for key, value in featureSums.items():
         train[key]['percent' + feature + 'Area'] = value/(train[key]['zoneArea'])
     for key, value in featureCounts.items():
@@ -60,7 +68,7 @@ for feature in uniqueFeatureList:
 bar.finish()
 
 trainSet = pd.DataFrame.from_dict(train, orient='index').reset_index(drop=True)
-trainSet.to_csv('../data/processed/validation.csv', index=False)
+trainSet.to_csv('../data/processed/validation2017.csv', index=False)
 #Features
 #Count of Feature
 #Percent Area of Feature
