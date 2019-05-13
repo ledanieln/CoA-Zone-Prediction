@@ -11,4 +11,4 @@ For my project, I wanted to go through the entire data science process, from fea
 I mainly used the open source GIS software, QGIS, for producing spatial queries and areal statistics. I tried inputting into a PostgreSQL database, but it took more work to get the correct schema and getting rid of Multipolygons, 3D Multipolygons, and other artifacts of the manual digitization.
 
 ## Data Exploration
-This process was more important than I first thought it to be. After I had cleaned the dataset into a CSV file with X features and Y labels, I immediately built a simple decision tree model using sklearn just to see if it would run. It did run and did produce a decision tree, but it was gigantic and I couldn't even see the results. Image here:
+
