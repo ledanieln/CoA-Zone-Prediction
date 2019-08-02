@@ -5,7 +5,8 @@ The City of Austin GIS department has been manually digitizing and labeling urba
 # Data
 The processed dataset contains |Y| = 4 labels  (Residential, Commercial, Industrial, and Special Purpose) and |X| = 60 classes or urban features. The data was input through numerous models that have varying accuracy for each class. The models predict Residential, Commercial, and Special Purpose zones well (>= 60% accuracy) depending on the model. The ensemble method combining Random Forest, Decision Tree (information gain), and K Nearest Neighbors was the most balanced classifier. 
 
-# Tools (QGIS, Python: pandas, numPy, Jupyter, matplotlib, scikit-learn) 
+# Tools 
+**(QGIS, Python: pandas, numPy, Jupyter, matplotlib, scikit-learn)**
 I used the open source GIS software, QGIS, for producing spatial queries and areal statistics. I tried inputting into a PostgreSQL database, but it took more work to get the correct schema and getting rid of Multipolygons, 3D Multipolygons, and other artifacts of the manual digitization. QGIS offers a good way to perform GUI based data processing techniques on both vector and raster data. 
 I used Python for all other data manipulation and processing techniques. Pandas and numPy were used for loading data, iterating through data and conducting calculations, matplotlib and Jupyter notebook was used to visualize, explore, and graph data, and scikit-learn was used for building the models and processing the data to fit in the model.
 
