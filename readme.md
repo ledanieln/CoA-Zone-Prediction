@@ -10,6 +10,6 @@ The processed dataset contains |Y| = 4 labels  (Residential, Commercial, Industr
 I used the open source GIS software, QGIS, for producing spatial queries and areal statistics. I tried inputting into a PostgreSQL database, but it took more work to get the correct schema and getting rid of Multipolygons, 3D Multipolygons, and other artifacts of the manual digitization. QGIS offers a good way to perform GUI based data processing techniques on both vector and raster data. 
 I used Python for all other data manipulation and processing techniques. Pandas and numPy were used for loading data, iterating through data and conducting calculations, matplotlib and Jupyter notebook was used to visualize, explore, and graph data, and scikit-learn was used for building the models and processing the data to fit in the model.  
 
-Most of the scripts I used are located in the *src* folder, and my Jupyter notebooks are located in the *notebooks* folder.
+Most of the scripts I used are located in the *src* folder, and my Jupyter notebooks are located in the *notebooks* folder. The *models* folder contains scripts mostly using scikit-learn to generate the predictive models. Results are detailed in the powerpoint.  
 
 This project was completed for a Data Mining class at Texas State University. For more details, my final presentation (presentation.pptx) is located in the main folder. Please contact me for a copy of the final report of the project.
