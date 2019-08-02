@@ -1,8 +1,10 @@
 # Predicting Zoning Districts from Digitized Urban Features (Austin, TX)
-# Introduction
 The City of Austin GIS department has been manually digitizing and labeling urban features for the past several years. This data is immensely valuble and costly and is essentially a gold mine for urban analytics and city planning. For my project, I wanted to use these urban features to try and predict city zoning districts (Residential, Commercial, Industrial, and Special Purpose) using various data mining and machine learning algorithms.
 
-# Data
+## Data, Methods, and Results
+![alt text](https://github.com/ledanieln/CoA-Zone-Prediction/blob/master/AustinUrbanFeatures.png "Urban Feature Data from Austin GIS Department")  
+Urban Feature Data from City of Austin GIS Department - Figure Generated in QGIS
+
 The processed dataset contains |Y| = 4 labels  (Residential, Commercial, Industrial, and Special Purpose) and |X| = 60 classes or urban features. The data was input through numerous models that have varying accuracy for each class. The models predict Residential, Commercial, and Special Purpose zones well (>= 60% accuracy) depending on the model. The ensemble method combining Random Forest, Decision Tree (information gain), and K Nearest Neighbors was the most balanced classifier. 
 
 # Tools 
