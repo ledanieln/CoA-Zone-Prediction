@@ -1,5 +1,5 @@
 # Predicting Zoning Districts from Digitized Urban Features (Austin, TX)
-The City of Austin GIS department has been manually digitizing and labeling urban features for the past several years. This data is immensely valuble and costly and is essentially a gold mine for urban analytics and city planning. For my project, I wanted to use these urban features to try and predict city zoning districts (Residential, Commercial, Industrial, and Special Purpose) using various data mining and machine learning algorithms.
+The City of Austin GIS department has been manually digitizing and labeling urban features for the past several years. This data is immensely valuble and costly, but essential for urban analytics and city planning. For my project, I wanted to use these urban features to try and predict city zoning districts (Residential, Commercial, Industrial, and Special Purpose) using various data mining and machine learning algorithms.
 
 ## Data, Methods, and Results
 ![alt text](https://github.com/ledanieln/CoA-Zone-Prediction/blob/master/AustinUrbanFeatures.png "Urban Feature Data from Austin GIS Department")  
